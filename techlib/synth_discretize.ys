@@ -1,0 +1,43 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# This script is used for rapid iteration on the pass
+# the proper implementation should go in the `synth_discretize.cc`
+# C++ implementation for the Yosys plugin.
+
+# == Begin ==
+hierarchy -auto-top
+proc
+# == Flatten ==
+flatten
+deminout
+opt
+wreduce
+opt
+# == Extract ==
+# extract -map ./techlib/cells_extract.v
+opt_merge
+# == Misc Opt ==
+peepopt
+# pmux2shiftx
+# == Synth ==
+synth -run :fine
+# == Technology Mapping ==
+read_verilog -lib ./techlib/cells_mod.v
+read_liberty -lib ./techlib/discretize.lib
+techmap -map +/techmap.v -map ./techlib/cells_map.v
+# == Mux/DFF mapping ==
+# opt -full -mux_undef -mux_bool
+# techmap -map +/techmap.v -map ./techlib/cells_dffe.v
+# opt
+# muxcover -mux4 -mux8
+# opt_merge
+techmap -map +/techmap.v -map ./techlib/cells_map.v -map ./techlib/cells_mux.v
+# dfflibmap -liberty ./techlib/discrete.lib
+# abc -liberty ./techlib/discrete.lib
+# opt -full
+# opt_clean -purge
+# == Map VCC and Ground ==
+hilomap -singleton -hicell VCC V -locell GND G
+# == Fixup Names ==
+autoname
+# == Print Stats ==
+stat

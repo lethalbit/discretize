@@ -1,0 +1,11 @@
+*
+!.gitignore
+!cells_dffe.v
+!cells_map.v
+!cells_mod.v
+!cells_mux.v
+!discretize.lib
+!Makefile.inc
+!README.md
+!synth_discretize.cc
+!synth_discretize.ys

@@ -1,0 +1,63 @@
+library(discrete) {
+	technology("cmos");
+
+    time_unit: "1ns";
+    voltage_unit: "1V";
+    current_unit: "1mA";
+    capacitive_load_unit(1, pf);
+
+    slew_lower_threshold_pct_fall: 30;
+    slew_upper_threshold_pct_fall: 30;
+    slew_lower_threshold_pct_rise: 70;
+    slew_upper_threshold_pct_rise: 70;
+
+    nom_process: 1;
+    nom_temperature: 25;
+    nom_voltage: 5;
+
+    // discrete transistors
+    cell(DISCRETE_NFET) {
+        area: 3;
+        pin(G) { direction: input; }
+        pin(S) { direction: input; }
+        pin(D) { direction: output; function: "G"; }
+    }
+    cell(DISCRETE_PFET) {
+        area: 3;
+        pin(G) { direction: input; }
+        pin(S) { direction: input; }
+        pin(D) { direction: output; function: "G'"; }
+    }
+
+    /* cell(DISCRETE_FET_PAIR) {
+        area: 6;
+        pin(G1) { direction: input; }
+        pin(S1) { direction: input; }
+        pin(D1) { direction: output; function: "G1"; }
+        pin(G2) { direction: input; }
+        pin(S2) { direction: input; }
+        pin(D2) { direction: output; function: "G2'"; }
+    } */
+
+    // Basic bit-cells
+
+    cell("$_NOT_") {
+        area: 2;
+        pin(A) { direction: input; }
+        pin(Y) { direction: output; function: "A'"; }
+    }
+
+    cell("$_NAND_") {
+        area: 2;
+        pin(A) { direction: input; }
+        pin(B) { direction: input; }
+        pin(Y) { direction: output; function: "(A*B)'"; }
+    }
+
+    // To make ABC happy
+    cell("$_BUF_") {
+        area: 2;
+        pin(A) { direction: input; }
+        pin(Y) { direction: output; function: "A"; }
+    }
+}
