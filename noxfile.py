@@ -12,6 +12,7 @@ BUILD   = (ROOT_DIR / 'build'  ).resolve()
 TESTS   = (ROOT_DIR / 'tests'  ).resolve()
 CONTRIB = (ROOT_DIR / 'contrib').resolve()
 TECHLIB = (ROOT_DIR / 'techlib').resolve()
+BACKEND = (ROOT_DIR / 'backend').resolve()
 
 
 if not BUILD.exists():
@@ -31,15 +32,21 @@ def clean(session: Session) -> None:
 @nox.session(venv_backend = 'none')
 def build(session: Session) -> None:
 	SYNTH_MODULE = (TECHLIB / 'synth_discretize.cc')
+	WRITE_MODULE = (BACKEND / 'write_kicad.cc')
 	in_tree = '--in-tree' in session.posargs
 	if not in_tree:
 		session.run(
 			'yosys-config', '--build', f'{BUILD}/{SYNTH_MODULE.stem}.so', str(SYNTH_MODULE)
 		)
+		session.run(
+			'yosys-config', '--build', f'{BUILD}/{WRITE_MODULE.stem}.so', str(WRITE_MODULE)
+		)
 	else:
-		YOSYS_DIR  = (BUILD     / 'yosys' )
-		YOSYS_TLB  = (YOSYS_DIR / 'techlibs')
-		DISCRETIZE = (YOSYS_TLB / 'discretize')
+		YOSYS_DIR  = (BUILD      / 'yosys'     )
+		YOSYS_TLB  = (YOSYS_DIR  / 'techlibs'  )
+		YOSYS_BKND = (YOSYS_DIR  / 'beckends'  )
+		DISCRETIZE = (YOSYS_TLB  / 'discretize')
+		WRITEKICAD = (YOSYS_BKND / 'kicad'     )
 
 		yosys_repo = 'https://github.com/YosysHQ/yosys.git'
 
@@ -49,6 +56,9 @@ def build(session: Session) -> None:
 			)
 		if not DISCRETIZE.exists():
 			DISCRETIZE.symlink_to(TECHLIB, target_is_directory = True)
+
+		if not WRITEKICAD.exists():
+			WRITEKICAD.symlink_to(BACKEND, target_is_directory = True)
 
 		session.chdir(YOSYS_DIR)
 		if not (YOSYS_DIR / 'Makefile.conf').exists():
