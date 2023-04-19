@@ -1,0 +1,5 @@
+*
+!.gitignore
+!counter.v
+!inverter.v
+!picorv32.v

@@ -1,0 +1,2 @@
+*.lib linguist-language=liberty
+tests/*.v linguist-vendored
