@@ -178,22 +178,22 @@ struct SynthDiscretizePass : public ScriptPass {
 		}
 
 		if (check_label("map_cells")) {
-			run(stringf("read_verilog -lib %s/cells_mod.v", techlib_path.c_str()));
+			run(stringf("read_verilog %s -lib %s/cells_mod.v", defs.c_str(), techlib_path.c_str()));
 			run(stringf("read_liberty -lib %s/discretize.lib", techlib_path.c_str()));
-			run(stringf("techmap -map +/techmap.v -map %s/cells_map.v", techlib_path.c_str()));
+			run(stringf("techmap %s -map +/techmap.v -map %s/cells_map.v", defs.c_str(), techlib_path.c_str()));
 
 
 			if (mux_map) {
 				run("opt -full -mux_undef -mux_bool");
 				if (dff_map) {
-					run(stringf("techmap -map +/techmap.v -map %s/cells_dffe.v", techlib_path.c_str()));
+					run(stringf("techmap %s -map +/techmap.v -map %s/cells_dffe.v", defs.c_str(), techlib_path.c_str()));
 				}
 				run("opt");
 				run("muxcover -mux4 -mux8");
 				run("opt_merge");
 			}
 
-			run(stringf("techmap -map +/techmap.v -map %s/cells_map.v -map %s/cells_mux.v", techlib_path.c_str(), techlib_path.c_str()));
+			run(stringf("techmap %s -map +/techmap.v -map %s/cells_map.v -map %s/cells_mux.v", defs.c_str(), techlib_path.c_str(), techlib_path.c_str()));
 
 			if (dff_map) {
 				run(stringf("dfflibmap -liberty %s/discretize.lib", techlib_path.c_str()));

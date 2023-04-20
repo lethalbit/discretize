@@ -16,7 +16,7 @@ module _80_FET_not (A, Y);
 			.Gn(A),
 			.Sn(_0_),
 			.D(1'b0)
-		)
+		);
 	`else
 		\PFET p0(
 			.G(A),
@@ -29,6 +29,7 @@ module _80_FET_not (A, Y);
 			.D(1'b0)
 		);
 	`endif
+
 	assign Y = _0_;
 endmodule
 
