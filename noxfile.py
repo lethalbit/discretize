@@ -44,7 +44,7 @@ def build(session: Session) -> None:
 	else:
 		YOSYS_DIR  = (BUILD      / 'yosys'     )
 		YOSYS_TLB  = (YOSYS_DIR  / 'techlibs'  )
-		YOSYS_BKND = (YOSYS_DIR  / 'beckends'  )
+		YOSYS_BKND = (YOSYS_DIR  / 'backends'  )
 		DISCRETIZE = (YOSYS_TLB  / 'discretize')
 		WRITEKICAD = (YOSYS_BKND / 'kicad'     )
 
