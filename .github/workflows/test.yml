@@ -1,0 +1,59 @@
+name: "discretize Tests"
+on:
+  push: {}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Initialize Environment
+        shell: bash
+        env:
+          WORKSPACE: ${{ github.workspace }}
+        run: |
+          echo "$HOME/.local/bin:$PATH" >> $GITHUB_PATH
+          echo "GITHUB_WORKSPACE=\"`pwd`\"" >> $GITHUB_ENV
+
+      - name: Setup GCC
+        run: |
+          sudo apt-add-repository ppa:ubuntu-toolchain-r/test
+          sudo apt-get update
+          sudo apt-get install gcc-11 g++-11 gcovr
+          echo "CC=gcc-11" >> $GITHUB_ENV
+          echo "CXX=g++-11" >> $GITHUB_ENV
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup OSS CAD Suite
+        uses: YosysHQ/setup-oss-cad-suite@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Meson + Ninja
+        shell: bash
+        run: |
+          python -m pip install --user --upgrade pip setuptools wheel setuptools_scm
+          python -m pip install --user meson ninja
+
+      - name: Version tools
+        run: |
+          $CC --version
+          $CXX --version
+          $GCOV --version
+          meson --version
+          ninja --version
+          yosys --version
+
+      - name: Configure
+        run: meson setup build --prefix=$HOME/.local
+
+      - name: Build
+        run: meson compile -C build
+
+      - name: Test
+        run: meson test -C build
