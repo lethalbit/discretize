@@ -58,7 +58,7 @@ napoleon_custom_sections  = [
 
 myst_heading_anchors = 3
 
-html_baseurl     = 'https://lethalbit.github.io/'
+html_baseurl     = 'https://lethalbit.github.io/discretize/'
 html_theme       = 'sphinx_rtd_theme'
 html_copy_source = False
 
