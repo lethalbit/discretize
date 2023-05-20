@@ -26,7 +26,7 @@ synth_discretize = shared_module(
 
 if not meson.is_subproject()
 	install_data(files([
-		'cells_dffe.v',
+		# 'cells_dffe.v',# Not done yet
 		'cells_map.v',
 		'cells_mod.v',
 		'cells_mux.v',
