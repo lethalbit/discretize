@@ -85,10 +85,13 @@ endif
 yosys_incdir    = yosys_datdir / 'include'
 yosys_plugindir = yosys_datdir / 'plugins'
 yosys_defines   = []
+yosys_incs      = []
 
 foreach elem : yosys_cxxflags.split()
 	if elem.startswith('-D')
 		yosys_defines += elem
+	elif elem.startswith('-I')
+		yosys_incs += elem.strip('-I').strip('"')
 	endif
 endforeach
 

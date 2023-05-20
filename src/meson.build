@@ -37,7 +37,7 @@ config_header = configure_file(
 	output: 'config.hh'
 )
 
-root_incs = include_directories('.', yosys_incdir)
+root_incs = include_directories('.', yosys_incdir, yosys_incs)
 
 subdir('techlib')
 subdir('backend')
