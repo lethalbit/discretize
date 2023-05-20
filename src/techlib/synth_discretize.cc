@@ -34,6 +34,10 @@ struct SynthDiscretizePass : public ScriptPass {
 		log("		Write the design statistics to the specified json file.\n");
 		log("		(Writing of an output file is omitted if this parameter is not set.)\n");
 		log("\n");
+		log("	-noflatten\n");
+		log("		Don't flatten the design, when used with `write_kicad` modules will be\n");
+		log("		made into sub-sheets.\n");
+		log("\n");
 		log("	-techlib <path>\n");
 		log("		Specify the directory where to look for the discretize technology library.\n");
 		log("		(default: +/discretize/)\n");
@@ -74,6 +78,7 @@ struct SynthDiscretizePass : public ScriptPass {
 	bool fixup_names{true};
 	bool dff_map{false};
 	bool mux_map{false};
+	bool flatten{true};
 
 	void execute(std::vector<std::string> args, RTLIL::Design *design) override {
 		std::size_t argidx{1};
@@ -97,6 +102,11 @@ struct SynthDiscretizePass : public ScriptPass {
 
 			if (args[argidx] == "-stats" && argidx + 1 < args.size()) {
 				stat_file = args[++argidx];
+				continue;
+			}
+
+			if (args[argidx] == "-noflatten") {
+				flatten = false;
 				continue;
 			}
 
@@ -160,9 +170,11 @@ struct SynthDiscretizePass : public ScriptPass {
 			run("proc");
 		}
 
-		if (check_label("flatten")) {
-			run("flatten");
-			run("deminout");
+		if (check_label("flatten", "(unless -noflatten)")) {
+			if (flatten) {
+				run("flatten");
+				run("deminout");
+			}
 		}
 
 		if (check_label("coarse")) {
