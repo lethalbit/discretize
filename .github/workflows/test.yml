@@ -40,6 +40,11 @@ jobs:
           python -m pip install --user --upgrade pip setuptools wheel setuptools_scm
           python -m pip install --user meson ninja
 
+      - name: Setup Yosys deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install tcl-dev libffi-dev
+
       - name: Version tools
         run: |
           $CC --version
