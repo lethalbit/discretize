@@ -1,0 +1,20 @@
+option(
+	'bugreport_url',
+	type: 'string',
+	value: 'https://github.com/lethalbit/discretize/issues',
+	description: 'URL for bug report submissions'
+)
+
+option(
+	'yosys_datdir',
+	type: 'string',
+	value: '',
+	description: 'The path to the yosys data dir. (if left empty `yosys-config --datdir` will be used)'
+)
+
+option(
+	'build_tests',
+	type: 'boolean',
+	value: true,
+	description: 'Build the tests'
+)

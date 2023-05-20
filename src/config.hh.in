@@ -1,0 +1,41 @@
+// SPDX-License-Identifier: BSD-3-Clause
+/* config.hh - Build-time configuration */
+@AUTOGEN_HEADER@
+#pragma once
+#if !defined(DISCRETIZE_CONFIG_HH)
+#define DISCRETIZE_CONFIG_HH
+
+#include <cstdint>
+#include <string_view>
+
+using namespace std::literals::string_view_literals;
+
+namespace discritize::config {
+	/* Version Information */
+	[[maybe_unused]]
+	constexpr static auto version{"@VERSION_NUMBER@"sv};
+	[[maybe_unused]]
+	constexpr static auto git_hash{"@GIT_HASH@"sv};
+	[[maybe_unused]]
+	constexpr static auto compiler_name{"@COMPILER_NAME@"sv};
+	[[maybe_unused]]
+	constexpr static auto compiler_version{"@COMPILER_VERSION@"sv};
+
+	/* Platform Information */
+	[[maybe_unused]]
+	constexpr static auto target_system{"@TARGET_SYS@"sv};
+	[[maybe_unused]]
+	constexpr static auto target_arch{"@TARGET_ARCH@"sv};
+	[[maybe_unused]]
+
+	[[maybe_unused]]
+	constexpr static auto build_system{"@BUILD_SYS@"sv};
+	[[maybe_unused]]
+	constexpr static auto build_arch{"@BUILD_ARCH@"sv};
+
+	/* Misc */
+	[[maybe_unused]]
+	constexpr static auto bugreport_url{"@BUGREPORT_URL@"sv};
+}
+
+#endif /* DISCRETIZE_CONFIG_HH */

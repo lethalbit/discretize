@@ -25,7 +25,6 @@ struct KiCadBackend : public Backend {
 	void execute(
 		std::ostream *&f, std::string filename, std::vector<std::string> args, RTLIL::Design *design
 	) override {
-
 	}
 
 } KiCadBackend;

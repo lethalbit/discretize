@@ -138,7 +138,6 @@ struct SynthDiscretizePass : public ScriptPass {
 		if (!design->full_selection())
 			log_cmd_error("This command only operates on fully selected designs!\n");
 
-		log_header(design, "Executing SYNTH_ICE40 pass.\n");
 		log_push();
 
 		run_script(design, "", "");
