@@ -3,7 +3,8 @@
 > **Warning** This is still in the early alpha stages, the output logic, netlist, and
 > KiCad files may be sub-optimal, or require an obscene number of devices.
 
-This is a toolkit for taking HDL designs and converting them to discrete transistor based designs. It implements a [yosys](https://github.com/YosysHQ/yosys) script to synthesize the design as well as some templates for [KiCad](https://www.kicad.org/) of common components.
+discretize is a set of two [Yosys] plugins; [`synth_discretize`], and [`write_kicad`], and a set of [utility scripts](./contrib/) for synthesizing an HDL design into a netlist of discrete [MOSFET]s and generating a [KiCad] netlist and schematic for the design.
+
 
 ## How It Works
 
@@ -12,42 +13,46 @@ TODO
 
 ## Usage
 
-Using the pass is just like any other Yosys pass, you simply load up your design and then call `synth_discretize` with the appropriate options.
+To convert an HDL design into it's discrete representation [`synth_discretize`] is used like any other [Yosys] pass to apply technology mapping and optimization onto the design, converting it to an equivalent design made out of [MOSFET]s
 
-For example, to synthesize the counter test you would do the following:
-
-```
-yosys> read_verilog ./tests/counter.v
-1. Executing Verilog-2005 frontend: ./tests/counter.v
-Parsing Verilog input from `./tests/counter.v' to AST representation.
-Generating RTLIL representation for module `\counter'.
-Successfully finished Verilog frontend.
-
-yosys> synth_discretize
-
-...
-
-2.17. Printing statistics.
-
-=== counter ===
-
-   Number of wires:                826
-   Number of wire bits:           2066
-   Number of public wires:           5
-   Number of public wire bits:      19
-   Number of memories:               0
-   Number of memory bits:            0
-   Number of processes:              0
-   Number of cells:                478
-     $_SDFF_PN0_                     8
-     GND                             1
-     NFET                          246
-     PFET                          222
-     VCC                             1
+For example, the following yosys script will synthesize the [`counter.v`](./tests/counter.v) file
+into a discrete netlist, and then dump the statistics and generated module.
 
 ```
+plugin -i ./build/src/techlib/synth_discretize.so
+read_verilog ./tests/counter.v
+synth_discretize -techlib ./src/techlib
+tee -o counter.stat.json stat -json
+write_verilog -noexpr counter.discrete.v
+```
 
-you can then use the `write_verilog -noexpr` command to dump the finalized verilog module or `write_json` to dump the netlist for use in the rest of the tools.
+You can run that like `$ yosys -s counter.ys`, and you should two files `counter.stats.json` and `counter.discrete.v`.
+
+The first file, `counter.stats.json` describes the design statistics, in the case of the example above it would be something like:
+
+```json
+"design": {
+  "num_wires":         826,
+  "num_wire_bits":     2066,
+  "num_pub_wires":     5,
+  "num_pub_wire_bits": 19,
+  "num_memories":      0,
+  "num_memory_bits":   0,
+  "num_processes":     0,
+  "num_cells":         478,
+  "num_cells_by_type": {
+      "$_SDFF_PN0_": 8,
+      "GND": 1,
+      "NFET": 246,
+      "PFET": 222,
+      "VCC": 1
+  }
+}
+```
+
+Notice two cells called `GND` and `VCC` those are added to ensure that constant highs and lows are tied properly, in a fully implemented design, those would be a ground pour and a power pour on the board.
+
+The next file, `counter.discrete.v` contains the dumped verilog module with all of the logic broken into wires and instances of `PFET`'s or `NFET`s.
 
 
 ## Configuring and Building
@@ -96,3 +101,11 @@ There is also a `bugreport_url` configuration option that is set to this reposit
 ## License
 
 Discretize is licensed under the [BSD-3-Clause](https://spdx.org/licenses/BSD-3-Clause.html), the full text of which can be found in the [LICENSE](LICENSE) file.
+
+
+[yosys]: https://github.com/YosysHQ/yosys
+[kicad]: https://www.kicad.org/
+
+[`synth_discretize`]: ./src/techlib
+[`write_kicad`]: ./src/backend
+[MOSFET]: https://en.wikipedia.org/wiki/MOSFET
