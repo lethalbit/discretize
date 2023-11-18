@@ -1,6 +1,7 @@
 # discretize
 
-> **Warning** This is still in the early alpha stages, the output logic, netlist, and
+> [!WARNING]
+> This is still in the early alpha stages, the output logic, netlist, and
 > KiCad files may be sub-optimal, or require an obscene number of devices.
 
 discretize is a set of two [Yosys] plugins; [`synth_discretize`], and [`write_kicad`], and a set of [utility scripts](./contrib/) for synthesizing an HDL design into a netlist of discrete [MOSFET]s and generating a [KiCad] netlist and schematic for the design.
