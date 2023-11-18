@@ -40,4 +40,3 @@ config_header = configure_file(
 root_incs = include_directories('.', yosys_incdir, yosys_incs)
 
 subdir('techlib')
-subdir('backend')

@@ -4,8 +4,7 @@
 > This is still in the early alpha stages, the output logic, netlist, and
 > KiCad files may be sub-optimal, or require an obscene number of devices.
 
-discretize is a set of two [Yosys] plugins; [`synth_discretize`], and [`write_kicad`], and a set of [utility scripts](./contrib/) for synthesizing an HDL design into a netlist of discrete [MOSFET]s and generating a [KiCad] netlist and schematic for the design.
-
+discretize is a set of a [Yosys] plugin, [`synth_discretize`], and a set of [utility scripts](./contrib/) for synthesizing an HDL design into a netlist of discrete [MOSFET]s and generating a [KiCad] netlist and schematic for the design.
 
 ## How It Works
 
@@ -108,5 +107,5 @@ Discretize is licensed under the [BSD-3-Clause](https://spdx.org/licenses/BSD-3-
 [kicad]: https://www.kicad.org/
 
 [`synth_discretize`]: ./src/techlib
-[`write_kicad`]: ./src/backend
+[`write_kicad`]: https://github.com/lethalbit/write_kicad
 [MOSFET]: https://en.wikipedia.org/wiki/MOSFET
