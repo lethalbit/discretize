@@ -14,6 +14,10 @@
 #include "kernel/yosys.h"
 #pragma GCC diagnostic pop
 
+#include "config.hh"
+
+namespace cfg = discritize::config;
+
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN
 
@@ -82,6 +86,12 @@ struct SynthDiscretizePass : public ScriptPass {
 		log("\n");
 		log("The following commands are executed by this synthesis command:\n");
 		help_script();
+		log("\n");
+		log("about synth_discretize:\n");
+		log("	license: BSD-3-Clause\n");
+		log("	website: https://github.com/lethalbit/discretize\n");
+		log("	version: %s\n", cfg::version.data());
+		log("	bug reports: %s", cfg::bugreport_url.data());
 		log("\n");
 	}
 
