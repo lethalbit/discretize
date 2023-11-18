@@ -3,7 +3,16 @@
 #include <string>
 #include <cstdint>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Warith-conversion"
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#pragma GCC diagnostic ignored "-Wformat"
+#pragma GCC diagnostic ignored "-Wdouble-promotion"
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include "kernel/yosys.h"
+#pragma GCC diagnostic pop
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN
