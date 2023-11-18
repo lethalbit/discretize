@@ -39,6 +39,11 @@ struct SynthDiscretizePass : public ScriptPass {
 		log("		Write the design to the specified verilog file.\n");
 		log("		(Writing of an output file is omitted if this parameter is not set.)\n");
 		log("\n");
+		log("	-kicad <file>\n");
+		log("		Write the design to the specified KiCad schematic file.\n");
+		log("		NOTE: The write_kicad plugin needs to be loaded to use this option.\n");
+		log("		(Writing of an output file is omitted if this parameter is not set.)\n");
+		log("\n");
 		log("	-stats <file>\n");
 		log("		Write the design statistics to the specified json file.\n");
 		log("		(Writing of an output file is omitted if this parameter is not set.)\n");
@@ -81,6 +86,7 @@ struct SynthDiscretizePass : public ScriptPass {
 	}
 
 	std::string top_opt{"-auto-top"};
+	std::string kicad_file{};
 	std::string json_file{};
 	std::string vlog_file{};
 	std::string stat_file{};
@@ -110,6 +116,11 @@ struct SynthDiscretizePass : public ScriptPass {
 
 			if (args[argidx] == "-verilog" && argidx + 1 < args.size()) {
 				vlog_file = args[++argidx];
+				continue;
+			}
+
+			if (args[argidx] == "-kicad" && argidx + 1 < args.size()) {
+				kicad_file = args[++argidx];
 				continue;
 			}
 
@@ -255,7 +266,13 @@ struct SynthDiscretizePass : public ScriptPass {
 
 		if (check_label("verilog")) {
 			if (!vlog_file.empty() || help_mode) {
-				run(stringf("write_verilog -noexpr %s", help_mode ? "<file-name>" : json_file.c_str()));
+				run(stringf("write_verilog -noexpr %s", help_mode ? "<file-name>" : vlog_file.c_str()));
+			}
+		}
+
+		if (check_label("kicad")) {
+			if (!kicad_file.empty() || help_mode) {
+				run(stringf("write_kicad %s", help_mode ? "<file-name>" : kicad_file.c_str()));
 			}
 		}
 
