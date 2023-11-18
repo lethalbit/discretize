@@ -62,6 +62,9 @@ struct SynthDiscretizePass : public ScriptPass {
 		log("		This is primarily used in conjunction with KiCad export for physical\n");
 		log("		implementation.\n");
 		log("\n");
+		log("	-decap\n");
+		log("		Insert decoupling capacitors roughly where appropriate.\n");
+		log("\n");
 		log("	-noautoname\n");
 		log("		Don't run 'autoname' on the design, as it takes a while on big designs.\n");
 		log("\n");
@@ -88,6 +91,7 @@ struct SynthDiscretizePass : public ScriptPass {
 	bool dff_map{false};
 	bool mux_map{false};
 	bool flatten{true};
+	bool decap{false};
 
 	void execute(std::vector<std::string> args, RTLIL::Design *design) override {
 		std::size_t argidx{1};
@@ -134,6 +138,11 @@ struct SynthDiscretizePass : public ScriptPass {
 				continue;
 			}
 
+			if (args[argidx] == "-decap") {
+				decap = true;
+				continue;
+			}
+
 			if (args[argidx] == "-noautoname") {
 				fixup_names = false;
 				continue;
@@ -173,6 +182,9 @@ struct SynthDiscretizePass : public ScriptPass {
 
 		if (add_ties)
 			defs += " -D INSERT_TIES";
+
+		if (decap)
+			defs += "-D DECAP";
 
 		if (check_label("begin")) {
 			run(stringf("hierarchy -check %s", help_mode ? "-top <top>" : top_opt.c_str()));
