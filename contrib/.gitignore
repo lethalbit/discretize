@@ -1,0 +1,6 @@
+*
+!.gitignore
+!.flake8
+!.mypy.ini
+!celllib.kicad_sch
+!meson.build
